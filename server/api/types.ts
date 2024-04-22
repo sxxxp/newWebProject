@@ -1,6 +1,6 @@
 interface IUser {
   nickname: string;
-  id: number;
+  uid: number;
   exp: number;
   level: number;
   rebirth: number;

@@ -21,25 +21,24 @@ const calluser = (id: string): Promise<IUser> => {
     pool.getConnection((err, con) => {
       if (err) reject(new Error(err.message));
       con.query(
-        "SELECT * FROM user_info WHERE id = ?",
+        "SELECT * FROM user_account WHERE email = ?",
         [id],
         (err, result: Array<IUser>) => {
           if (err) reject(new Error(err.message));
           if (!result[0]) reject(new Error("no content"));
           else {
-            con.release();
-
             resolve(result[0]);
           }
         }
       );
+      con.release();
     });
   });
 };
 
 const handleCallUserError = (e: any) => {
   if (e.message == "no content") {
-    return { code: 204, message: "" };
+    return { code: 204, message: e.message };
   } else {
     return { code: 500, message: e.message };
   }

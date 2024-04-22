@@ -2,15 +2,23 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import stream from "./logger";
+import cors from "cors";
 import router from "./api";
 import { ignoreFavicon } from "./functions";
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
-
+const corsOption = {
+  origin: ["localhost:3000", true],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 app.use(morgan(":method :status :url :response-time ms", { stream }));
 app.use(ignoreFavicon);
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(cors(corsOption));
 app.use(router);
 
 app.get("/", (req: Request, res: Response) => {
@@ -18,7 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("*", (req: Request, res: Response) => {
-  throw new Error("404 not found");
+  res.status(404).json({ message: "404 Not Found" });
 });
 
 app.listen(port, () => {

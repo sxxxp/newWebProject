@@ -1,38 +1,51 @@
-.App {
+.form-body {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.App {
+  text-align: center;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.form-input {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  height: 70px;
+  width: 400px;
+  padding: 0px 15px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: bolder;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.btn-submit {
+  background-color: transparent;
+  width: 250px;
+  padding: 3% 0%;
+  border-radius: 40px;
+  color: gray;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
 }
-
-.App-link {
-  color: #61dafb;
+.btn-submit:hover {
+  color: black;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn-submit:active {
+  background-color: black;
+}
+.btn-login {
+  background-color: transparent;
+  width: 350px;
+  padding: 3% 0%;
+  border-radius: 40px;
+  color: gray;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+.btn-login:hover {
+  color: black;
+  border-color: black;
+}
+.btn-login:active {
+  background-color: black;
 }
