@@ -1,7 +1,3 @@
-.form-body {
-  text-align: center;
-}
-
 .App {
   text-align: center;
 }
@@ -48,4 +44,17 @@
 }
 .btn-login:active {
   background-color: black;
+}
+
+.Link {
+  text-decoration: none;
+  background-color: transparent;
+  text-align: center;
+  color: gray;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.Link:hover {
+  color: black;
 }

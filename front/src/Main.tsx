@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import auth from "./firebase";
 import "./App.css";
 import { useCookies } from "react-cookie";
+import axiosInstance from "./axiosIntercepter";
+
 interface IUser {
   email: string;
   role: number;
@@ -13,50 +15,50 @@ interface IUser {
   nickname: string;
   create_at: Date;
 }
-const Main = () => {
-  const [cookie, setCookie, removeCookie] = useCookies(["access_token"]);
-  const [user, setUser] = useState<IUser | null>();
+
+interface IPostData {
+  message: string;
+  user?: IUser;
+  access_token?: string;
+}
+const Main = ({ user }: { user: IUser | undefined }) => {
+  const [cookie, setCookie, removeCookie] = useCookies();
+  // const [user, setUser] = useState<IUser | null>();
   const [token, setToken] = useState<string | null>();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (cookie.access_token) setToken(cookie.access_token);
-    console.log(cookie);
-  }, [cookie]);
+  // useEffect(() => {
+  //   console.log(cookie);
+  //     setUser(cookie.user);
+  //   }
+  // }, [cookie.user]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider).then((data) => {
       if (!data) throw new Error("no data");
-      fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      axiosInstance
+        .post("/login", {
           email: data.user.email,
           uid: data.user.uid,
-        }),
-      }).then((res) => {
-        if (res.status === 204) {
-          console.log(data.user);
-          if (data.user) {
-            navigate("/register", { state: JSON.stringify(data.user) });
-          } else {
-            return;
+        })
+        .then((res) => {
+          if (res.status === 204) {
+            console.log(data.user);
+            if (data.user) {
+              navigate("/register", { state: JSON.stringify(data.user) });
+            } else {
+              return;
+            }
           }
-        } else if (res.status === 200) {
-          res.json().then((value) => {
-            setUser(value.user);
-            setCookie("access_token", value.access_token, {
-              httpOnly: true,
-              secure: true,
-              maxAge: 1000 * 60 * 30,
-              path: "/",
-            });
-          });
-        }
-      });
+          //  else if (res.status === 200) {
+          //   const { user, access_token }: IPostData = res.data;
+          //   setUser(user);
+          //   setCookie("user", user, {
+          //     maxAge: 60 * 30,
+          //   });
+          // }
+        });
     });
   };
   return (
@@ -69,10 +71,8 @@ const Main = () => {
       ) : (
         ""
       )}
-      <p>
-        {user ? user.nickname : ""}
-        {token ? token : ""}
-      </p>
+
+      <p>{user ? user.nickname : ""}</p>
     </div>
   );
 };

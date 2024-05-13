@@ -16,12 +16,34 @@ const findAllUser = (req: Request, res: Response) => {
     );
   });
 };
+interface Iinstance<T> {
+  [uid: string]: T;
+}
+
+class User {
+  private static instance: Iinstance<User> = {};
+  private user: IUser;
+  public static uid: string;
+  constructor(user: IUser) {
+    this.user = user;
+  }
+  static async getInstance(uid: string) {
+    if (uid in this.instance) {
+      return this.instance[uid];
+    }
+    const user = await calluser(uid);
+    this.uid = uid;
+    this.instance[uid] = new User(user);
+
+    return this.instance[uid];
+  }
+}
 const calluser = (id: string): Promise<IUser> => {
   return new Promise((resolve, reject) => {
     pool.getConnection((err, con) => {
       if (err) reject(new Error(err.message));
       con.query(
-        "SELECT * FROM user_account WHERE email = ?",
+        "SELECT * FROM user_account WHERE uid = ?",
         [id],
         (err, result: Array<IUser>) => {
           if (err) reject(new Error(err.message));
@@ -46,7 +68,9 @@ const handleCallUserError = (e: any) => {
 
 const findOneUser = async (req: Request, res: Response) => {
   try {
-    res.json(await calluser(req.params.id));
+    console.log(req.params.id);
+    const user = await User.getInstance(req.params.id);
+    res.json(user);
   } catch (e: any) {
     const { code, message } = handleCallUserError(e);
     res.status(code).json(message);
@@ -79,4 +103,5 @@ export {
   findUserByNickname,
   calluser,
   handleCallUserError,
+  User,
 };

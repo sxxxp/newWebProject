@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+const verifyAccessToken = (req: Request, res: Response, next: NextFunction) => {
   const access_token = req.cookies.access_token;
   if (!access_token)
     return next(res.status(401).json({ message: "액세스 토큰이 없습니다." }));
@@ -15,4 +15,4 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export { verifyToken };
+export { verifyAccessToken };

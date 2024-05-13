@@ -5,14 +5,16 @@ import stream from "./logger";
 import cors from "cors";
 import router from "./api";
 import { ignoreFavicon } from "./functions";
+
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
-const corsOption = {
-  origin: ["localhost:3000", true],
+const corsOption: cors.CorsOptions = {
+  origin: ["localhost:3000", "127.0.0.1:3000", true],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 };
 app.use(morgan(":method :status :url :response-time ms", { stream }));
 app.use(ignoreFavicon);
